@@ -36,6 +36,11 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # News app dependencies
+  flutter_riverpod: ^2.5.1 # state management
+  shared_preferences: ^2.2.3 # bookmarks
+  timeago: ^3.6.1 # "2 hours ago" labels
+  shimmer: ^3.0.0
+  go_router: ^13.0.0
   http: ^1.2.1
   cached_network_image: ^3.3.1
   provider: ^6.1.2

@@ -1,8 +1,22 @@
 import 'package:flutter/cupertino.dart';
-import 'today_screen.dart';
-import 'news_screen.dart';
-import 'search_screen.dart';
-import 'bookmarks_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'screens/today_screen.dart';
+import 'screens/news_screen.dart';
+import 'screens/search_screen.dart';
+import 'screens/bookmarks_screen.dart';
+
+void main() {
+  runApp(const ProviderScope(child: MyApp()));
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CupertinoApp(title: 'Newskit FL', home: MainTabScreen());
+  }
+}
 
 class MainTabScreen extends StatelessWidget {
   const MainTabScreen({super.key});

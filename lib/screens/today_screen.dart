@@ -14,8 +14,7 @@ class TodayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final topHeadlinesAsync = ref.watch(topHeadlinesProvider);
     final now = DateTime.now();
-    final dateStr = '${_weekday(now.weekday)}, ${_month(now.month)} ${now.day}'
-        .toUpperCase();
+    final dateStr = '${_weekday(now.weekday)}, ${_month(now.month)} ${now.day}, ${now.year}'.toUpperCase();
 
     return CupertinoPageScaffold(
       child: CustomScrollView(

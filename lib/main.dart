@@ -1,20 +1,50 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'providers/bookmarks_provider.dart';
+import 'providers/theme_mode_provider.dart';
 import 'screens/today_screen.dart';
 import 'screens/news_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/bookmarks_screen.dart';
+import 'screens/settings_screen.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      child: const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const CupertinoApp(title: 'Newskit FL', home: MainTabScreen());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    final platformBrightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    final currentBrightness = themeMode == ThemeMode.dark
+        ? Brightness.dark
+        : themeMode == ThemeMode.light
+        ? Brightness.light
+        : platformBrightness;
+
+    return CupertinoApp(
+      title: 'Newskit FL',
+      debugShowCheckedModeBanner: false,
+      theme: CupertinoThemeData(
+        brightness: currentBrightness,
+        primaryColor: CupertinoColors.systemRed,
+      ),
+      home: const MainTabScreen(),
+    );
   }
 }
 
@@ -47,6 +77,11 @@ class MainTabScreen extends StatelessWidget {
             activeIcon: Icon(CupertinoIcons.bookmark_fill),
             label: 'Saved',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.settings),
+            activeIcon: Icon(CupertinoIcons.settings_solid),
+            label: 'Settings',
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -61,6 +96,8 @@ class MainTabScreen extends StatelessWidget {
                 return const SearchScreen();
               case 3:
                 return const BookmarksScreen();
+              case 4:
+                return const SettingsScreen();
               default:
                 return const TodayScreen();
             }

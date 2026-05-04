@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../models/article.dart';
 import '../../providers/bookmarks_provider.dart';
@@ -17,24 +19,29 @@ class ArticleDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
-  late final WebViewController _webController;
-  bool _isLoading = true;
+  WebViewController? _webController;
+  bool _isLoading = false;
   double _loadingProgress = 0;
+
+  bool get _isLinux => defaultTargetPlatform == TargetPlatform.linux;
 
   @override
   void initState() {
     super.initState();
-    _webController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (p) => setState(() => _loadingProgress = p / 100),
-          onPageStarted: (_) => setState(() => _isLoading = true),
-          onPageFinished: (_) => setState(() => _isLoading = false),
-          onWebResourceError: (_) => setState(() => _isLoading = false),
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.article.url));
+    if (!_isLinux) {
+      _isLoading = true;
+      _webController = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (p) => setState(() => _loadingProgress = p / 100),
+            onPageStarted: (_) => setState(() => _isLoading = true),
+            onPageFinished: (_) => setState(() => _isLoading = false),
+            onWebResourceError: (_) => setState(() => _isLoading = false),
+          ),
+        )
+        ..loadRequest(Uri.parse(widget.article.url));
+    }
   }
 
   @override
@@ -83,7 +90,10 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
       child: SafeArea(
         child: Stack(
           children: [
-            WebViewWidget(controller: _webController),
+            if (_isLinux)
+              _buildLinuxFallback(context)
+            else
+              WebViewWidget(controller: _webController!),
             if (_isLoading)
               Positioned(
                 top: 0,
@@ -100,6 +110,48 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
                   ),
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLinuxFallback(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              CupertinoIcons.globe,
+              size: 72,
+              color: CupertinoColors.systemGrey,
+            ),
+            const SizedBox(height: 18),
+            const Text(
+              'WebView is not supported on Linux yet.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Open the article in your browser instead.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15, color: CupertinoColors.systemGrey),
+            ),
+            const SizedBox(height: 24),
+            CupertinoButton.filled(
+              onPressed: () async {
+                final uri = Uri.parse(widget.article.url);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                } else {
+                  _showToast(context, 'Unable to open browser');
+                }
+              },
+              child: const Text('Open in Browser'),
+            ),
           ],
         ),
       ),

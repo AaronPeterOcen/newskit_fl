@@ -1,4 +1,5 @@
-// TODO Implement this library.
+// News data providers for fetching headlines, categories, and search results.
+// Providers are used by the UI screens to request async article data.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/article.dart';
 import '../services/news_service.dart';

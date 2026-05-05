@@ -1,3 +1,4 @@
+// Today screen shows the latest top headlines and featured story.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +15,9 @@ class TodayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final topHeadlinesAsync = ref.watch(topHeadlinesProvider);
     final now = DateTime.now();
-    final dateStr = '${_weekday(now.weekday)}, ${_month(now.month)} ${now.day}, ${now.year}'.toUpperCase();
+    final dateStr =
+        '${_weekday(now.weekday)}, ${_month(now.month)} ${now.day}, ${now.year}'
+            .toUpperCase();
 
     return CupertinoPageScaffold(
       child: CustomScrollView(

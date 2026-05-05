@@ -1,3 +1,4 @@
+// Settings screen for choosing theme mode and viewing accessibility notes.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';

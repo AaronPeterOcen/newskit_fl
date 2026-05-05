@@ -1,3 +1,4 @@
+// Article detail screen that loads the web article and supports sharing/bookmarking.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

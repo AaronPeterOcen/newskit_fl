@@ -1,4 +1,5 @@
-// TODO Implement this library.
+// News service layer for fetching articles from NewsAPI.
+// Handles API request building, response parsing, and error handling.
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/article.dart';

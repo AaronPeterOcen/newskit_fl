@@ -1,3 +1,4 @@
+// Article model used across the app to represent news content.
 class Article {
   final String title;
   final String? description;

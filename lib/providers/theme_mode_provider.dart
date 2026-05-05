@@ -1,3 +1,5 @@
+// Theme mode provider for light/dark/system theme selection.
+// Persists user preference with SharedPreferences.
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';

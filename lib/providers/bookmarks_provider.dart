@@ -1,4 +1,5 @@
-// TODO Implement this library.
+// Bookmarks provider for saving and loading user-saved articles.
+// Uses SharedPreferences to persist bookmarked content locally.
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';

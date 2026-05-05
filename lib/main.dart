@@ -1,3 +1,5 @@
+// Main app entrypoint and root navigation setup.
+// Uses Riverpod for dependency injection and theme persistence.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';

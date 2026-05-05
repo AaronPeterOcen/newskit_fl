@@ -13,6 +13,19 @@ Newskit FL is a cross-platform Flutter news application that helps users discove
 - Persistent bookmarks using local storage
 - Supports Android, iOS, Linux, macOS, Windows, and Web
 
+## Screenshots
+
+![Today screen](docs/screenshots/today.png)
+_Today screen with top headlines and card-style featured news._
+
+![News screen](docs/screenshots/news.png)
+_News screen with selectable categories and article list._
+
+![Settings screen](docs/screenshots/settings.png)
+_Settings screen with theme selection and accessibility notes._
+
+> Note: Add screenshot files to `docs/screenshots/` using the file names above to display them in this README.
+
 ## Installation
 
 ### Prerequisites

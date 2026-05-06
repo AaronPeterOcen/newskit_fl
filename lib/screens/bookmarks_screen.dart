@@ -8,11 +8,14 @@ import '../../models/article.dart';
 import '../../providers/bookmarks_provider.dart';
 import 'article_detail_screen.dart';
 
+/// Screen that displays all saved/bookmarked articles.
+/// Allows users to view their collection and remove articles.
 class BookmarksScreen extends ConsumerWidget {
   const BookmarksScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch bookmarks state for real-time updates
     final bookmarks = ref.watch(bookmarksProvider);
 
     return CupertinoPageScaffold(
@@ -91,6 +94,7 @@ class BookmarksScreen extends ConsumerWidget {
     );
   }
 
+  /// Shows confirmation dialog before clearing all bookmarks.
   void _confirmClear(BuildContext context, WidgetRef ref) {
     showCupertinoDialog(
       context: context,
@@ -98,6 +102,7 @@ class BookmarksScreen extends ConsumerWidget {
         title: const Text('Clear All Saved Stories?'),
         content: const Text('This will remove all your saved articles.'),
         actions: [
+          // Destructive action to clear all bookmarks
           CupertinoDialogAction(
             isDestructiveAction: true,
             onPressed: () {
@@ -106,6 +111,7 @@ class BookmarksScreen extends ConsumerWidget {
             },
             child: const Text('Clear All'),
           ),
+          // Cancel action
           CupertinoDialogAction(
             isDefaultAction: true,
             onPressed: () => Navigator.pop(context),
@@ -117,7 +123,9 @@ class BookmarksScreen extends ConsumerWidget {
   }
 }
 
+/// Widget for displaying a single bookmark tile with swipe-to-delete functionality.
 class _BookmarkTile extends ConsumerWidget {
+  /// The article to display
   final Article article;
   const _BookmarkTile({required this.article});
 

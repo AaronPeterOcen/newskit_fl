@@ -8,6 +8,7 @@ import '../../models/article.dart';
 import '../../providers/news_provider.dart';
 import 'article_detail_screen.dart';
 
+/// Screen that allows users to search for articles by keyword.
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
@@ -15,8 +16,12 @@ class SearchScreen extends ConsumerStatefulWidget {
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
+/// State for [SearchScreen] that manages search input and results display.
 class _SearchScreenState extends ConsumerState<SearchScreen> {
+  /// Controller for the search text field
   final _controller = TextEditingController();
+
+  /// Current search query
   String _query = '';
 
   @override
@@ -60,9 +65,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 }
 
+/// Widget that shows suggested topics when search field is empty.
 class _SearchEmptyState extends StatelessWidget {
   const _SearchEmptyState();
 
+  /// List of suggested search topics
   static const _suggestions = [
     'Technology',
     'Climate',
@@ -118,7 +125,9 @@ class _SearchEmptyState extends StatelessWidget {
   }
 }
 
+/// Widget that displays search results for a given query.
 class _SearchResults extends ConsumerWidget {
+  /// The search query to find articles for
   final String query;
   const _SearchResults({required this.query});
 
@@ -176,7 +185,9 @@ class _SearchResults extends ConsumerWidget {
   }
 }
 
+/// Widget for displaying a single search result as a tile.
 class _SearchResultTile extends StatelessWidget {
+  /// The article to display
   final Article article;
   const _SearchResultTile({required this.article});
 

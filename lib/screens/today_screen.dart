@@ -8,12 +8,15 @@ import '../../models/article.dart';
 import '../../providers/news_provider.dart';
 import 'article_detail_screen.dart';
 
+/// Screen that displays top headlines and a featured story for the current day.
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch top headlines from provider
     final topHeadlinesAsync = ref.watch(topHeadlinesProvider);
+    // Format current date for display
     final now = DateTime.now();
     final dateStr =
         '${_weekday(now.weekday)}, ${_month(now.month)} ${now.day}, ${now.year}'
@@ -22,8 +25,10 @@ class TodayScreen extends ConsumerWidget {
     return CupertinoPageScaffold(
       child: CustomScrollView(
         slivers: [
+          // Navigation bar with date display
           CupertinoSliverNavigationBar(
             largeTitle: const Text('Today'),
+            // Show current date in navigation bar
             trailing: Text(
               dateStr,
               style: const TextStyle(
@@ -32,10 +37,12 @@ class TodayScreen extends ConsumerWidget {
               ),
             ),
           ),
+          // Display headlines with loading, error, and data states
           topHeadlinesAsync.when(
             loading: () => const SliverFillRemaining(
               child: Center(child: CupertinoActivityIndicator()),
             ),
+            // Error state with retry button
             error: (e, _) => SliverFillRemaining(
               child: Center(
                 child: Column(
@@ -61,11 +68,14 @@ class TodayScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            // Success state with featured article and top stories
             data: (articles) => SliverList(
               delegate: SliverChildListDelegate([
                 if (articles.isNotEmpty) ...[
+                  // Featured article card at the top
                   _FeaturedArticleCard(article: articles.first),
                   const _SectionHeader(title: 'Top Stories'),
+                  // Display top 10 stories after featured article
                   ...articles
                       .skip(1)
                       .take(10)
@@ -79,8 +89,11 @@ class TodayScreen extends ConsumerWidget {
     );
   }
 
+  /// Converts weekday number (1-7) to abbreviated day name
   String _weekday(int d) =>
       ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][d - 1];
+
+  /// Converts month number (1-12) to full month name
   String _month(int m) => [
     'January',
     'February',
@@ -97,7 +110,9 @@ class TodayScreen extends ConsumerWidget {
   ][m - 1];
 }
 
+/// Widget that displays a featured article with image and details.
 class _FeaturedArticleCard extends StatelessWidget {
+  /// The article to display as featured
   final Article article;
   const _FeaturedArticleCard({required this.article});
 
@@ -196,7 +211,9 @@ class _FeaturedArticleCard extends StatelessWidget {
   }
 }
 
+/// Section header widget for grouping articles
 class _SectionHeader extends StatelessWidget {
+  /// The title of the section
   final String title;
   const _SectionHeader({required this.title});
 
@@ -216,7 +233,9 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
+/// Widget for displaying a top story in list format.
 class _TopStoryTile extends StatelessWidget {
+  /// The article to display
   final Article article;
   const _TopStoryTile({required this.article});
 

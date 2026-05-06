@@ -8,6 +8,7 @@ import '../../models/article.dart';
 import '../../providers/news_provider.dart';
 import 'article_detail_screen.dart';
 
+/// List of available news categories for filtering articles
 const _categories = [
   'general',
   'technology',
@@ -18,6 +19,7 @@ const _categories = [
   'science',
 ];
 
+/// Screen that displays news articles filtered by selected category.
 class NewsScreen extends ConsumerStatefulWidget {
   const NewsScreen({super.key});
 
@@ -25,17 +27,21 @@ class NewsScreen extends ConsumerStatefulWidget {
   ConsumerState<NewsScreen> createState() => _NewsScreenState();
 }
 
+/// State for [NewsScreen] that manages category selection and article display.
 class _NewsScreenState extends ConsumerState<NewsScreen> {
+  /// Currently selected news category
   String _selectedCategory = 'general';
 
   @override
   Widget build(BuildContext context) {
+    // Watch articles for the selected category
     final articlesAsync = ref.watch(categoryNewsProvider(_selectedCategory));
 
     return CupertinoPageScaffold(
       child: CustomScrollView(
         slivers: [
           const CupertinoSliverNavigationBar(largeTitle: Text('News')),
+          // Category filter buttons
           SliverToBoxAdapter(
             child: SizedBox(
               height: 44,
@@ -47,6 +53,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                 itemBuilder: (context, i) {
                   final cat = _categories[i];
                   final selected = cat == _selectedCategory;
+                  // Category button with animation
                   return GestureDetector(
                     onTap: () => setState(() => _selectedCategory = cat),
                     child: AnimatedContainer(
@@ -79,6 +86,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 12)),
+          // Display articles with loading, error, and data states
           articlesAsync.when(
             loading: () => SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -86,6 +94,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                 childCount: 8,
               ),
             ),
+            // Error state with retry button
             error: (e, _) => SliverFillRemaining(
               child: Center(
                 child: Column(
@@ -111,6 +120,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                 ),
               ),
             ),
+            // Success state with articles list
             data: (articles) => articles.isEmpty
                 ? const SliverFillRemaining(
                     child: Center(
@@ -132,10 +142,13 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
     );
   }
 
+  /// Capitalizes the first letter of a string.
   String _capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 }
 
+/// Widget for displaying a single news article in list format.
 class _NewsArticleTile extends StatelessWidget {
+  /// The article to display
   final Article article;
   const _NewsArticleTile({required this.article});
 
@@ -243,10 +256,12 @@ class _NewsArticleTile extends StatelessWidget {
 }
 
 class _ArticleSkeletonTile extends StatelessWidget {
+  /// Placeholder tile shown while articles are loading
   const _ArticleSkeletonTile();
 
   @override
   Widget build(BuildContext context) {
+    // Use grey background color for skeleton placeholders
     final bg = CupertinoColors.systemGrey5.resolveFrom(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
